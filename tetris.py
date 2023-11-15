@@ -214,7 +214,7 @@ def clear_rows(grid, locked):
                 try:
                     del locked[(j,i)]
                 except:
-                    continue
+                    continue 
 
     if inc > 0:
         for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
