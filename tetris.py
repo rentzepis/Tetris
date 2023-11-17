@@ -321,16 +321,18 @@ def draw_window(surface, grid, score=0, last_score=0):
 
     surface.blit(label, (start_x, start_y + 200))
     
-    # create labels for P1's board and P2's board
+     # create labels for P1's board and P2's board
     label_p1 = font.render('Player 1', 1, (255, 255, 255)) # makes 'Player 1' text white
     label_p2 = font.render('Player 2', 1, (255,255,255)) # makes 'Player 2' text white
     
-    # position P1 label above the left half of the board and P2 above the right half of the board
+    # position P1 label below the left half of the board and P2 below the right half of the board
     label_p1_x = top_left_x + play_width // 4 - label_p1.get_width() //2
     label_p2_x = top_left_x + 3 * play_width // 4 - label_p2.get_width() //2
-       
-     # last score
 
+    surface.blit(label_p1, (label_p1_x, label_p2_x)) 
+    surface.blit(label_p2, (label_p1_x + 300, label_p2_x))
+    
+     # last score
     label_hi = font.render('HIGHSCORE   ' + str(last_score), 1, (255, 255, 255))
 
     start_x_hi = top_left_x - 240
@@ -378,8 +380,10 @@ def get_max_score():
     return score
 
 def main(window):
-    locked_positions = {}
-    create_grid(locked_positions)
+    locked_positions_1 = {}
+    create_grid(locked_positions_1)
+    locked_positions_2 = {}
+    create_grid(locked_positions_2)
 
     change_piece_1 = False
     change_piece_2 = False
@@ -397,7 +401,8 @@ def main(window):
 
     while run:
         # need to constantly make new grid as locked positions always change
-        grid = create_grid(locked_positions)
+        grid = create_grid(locked_positions_1)
+        grid = create_grid(locked_positions_2)
 
         # helps run the same on every computer
         # add time since last tick() to fall_time
@@ -428,74 +433,90 @@ def main(window):
                 # need to generate new piece
                 change_piece_2 = True
 
-        for event in pygame.event.get():
+        for event in pygame.event.get():        
             if event.type == pygame.QUIT:
                 run = False
                 pygame.display.quit()
                 quit()
 
+            # keys for player one 
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_a:
                     current_piece_1.x -= 1  # move x position left
                     if not valid_space(current_piece_1, grid, 0, 10):
                         current_piece_1.x += 1
 
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_d:
                     current_piece_1.x += 1  # move x position right
                     if not valid_space(current_piece_1, grid, 0, 10):
                         current_piece_1.x -= 1
 
-                elif event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_s:
                     # move shape down
                     current_piece_1.y += 1
                     if not valid_space(current_piece_1, grid, 0, 10):
                         current_piece_1.y -= 1
 
-                elif event.key == pygame.K_UP:
+                elif event.key == pygame.K_w:
                     # rotate shape
                     current_piece_1.rotation = current_piece_1.rotation + 1 % len(current_piece_1.shape)
                     if not valid_space(current_piece_1, grid, 0, 10):
                         current_piece_1.rotation = current_piece_1.rotation - 1 % len(current_piece_1.shape)
                 
-                if event.key == pygame.K_a:
+                #keys for player two
+                if event.key == pygame.K_LEFT:         
                     current_piece_2.x -= 1  # move x position left
                     if not valid_space(current_piece_2, grid, 0, 10):
                         current_piece_2.x += 1
 
-                elif event.key == pygame.K_d:
+                elif event.key == pygame.K_RIGHT:
                     current_piece_2.x += 1  # move x position right
                     if not valid_space(current_piece_2, grid, 0, 10):
                         current_piece_2.x -= 1
 
-                elif event.key == pygame.K_s:
+                elif event.key == pygame.K_UP:
                     # move shape down
                     current_piece_2.y += 1
                     if not valid_space(current_piece_2, grid, 0, 10):
                         current_piece_2.y -= 1
 
-                elif event.key == pygame.K_w:
+                elif event.key == pygame.K_DOWN:
                     # rotate shape
                     current_piece_2.rotation = current_piece_2.rotation + 1 % len(current_piece_2.shape)
                     if not valid_space(current_piece_2, grid, 0, 10):
                         current_piece_2.rotation = current_piece_2.rotation - 1 % len(current_piece_2.shape)
 
-        piece_pos = convert_shape_format(current_piece_1) fix this
+
+        piece_pos_1 = convert_shape_format(current_piece_1)
+        piece_pos_2 = convert_shape_format(current_piece_2)
         
 
         # draw the piece on the grid by giving color in the piece locations
-        for i in range(len(piece_pos)):
-            x, y = piece_pos[i]
+        for i in range(len(piece_pos_1)):   # for player one
+            x, y = piece_pos_1[i]
             if y >= 0:
                 grid[y][x] = current_piece_1.color
+        for i in range(len(piece_pos_2)):   # for player two
+            x, y = piece_pos_2[i]
+            if y >= 0:
+                grid[y][x] = current_piece_2.color
 
-        if change_piece_1:  # if the piece is locked
-            for pos in piece_pos:
+        if change_piece_1:  # if piece 1 is locked
+            for pos in piece_pos_1:
                 p = (pos[0], pos[1])
-                locked_positions[p] = current_piece_1.color       # add the key and value in the dictionary
+                locked_positions_1[p] = current_piece_1.color       # add the key and value in the dictionary
             current_piece_1 = next_piece_1
             next_piece_1 = get_shape()
             change_piece_1 = False
-            score += clear_rows(grid, locked_positions) * 10    # increment score by 10 for every row cleared
+        if change_piece_2:  # if piece 2 is locked
+            for pos in piece_pos_2:
+                p = (pos[0], pos[1])
+                locked_positions_2[p] = current_piece_2.color       # add the key and value in the dictionary
+            current_piece_2 = next_piece_2
+            next_piece_2 = get_shape()
+            change_piece_2 = False
+
+            score += clear_rows(grid, locked_positions_1) * 10    # increment score by 10 for every row cleared
             update_score(score)
 
             if last_score < score:
@@ -506,7 +527,7 @@ def main(window):
         draw_next_shape(next_piece_2, window, 0, "P2")
         pygame.display.update()
 
-        if check_lost(locked_positions):
+        if check_lost(locked_positions_1) or check_lost(locked_positions_2):
             run = False
 
     draw_text_middle('You Lost', 40, (255, 255, 255), window)
@@ -517,7 +538,18 @@ def main(window):
 def main_menu(window):
     run = True
     while run:
-        draw_text_middle('Press any key to begin', 50, (255, 255, 255), window)
+        font = pygame.font.SysFont('courier', 40)
+        
+        image = pygame.image.load()
+        draw_text_middle('Press any key to begin', 40, (255, 255, 255), window) #adds the "press any key" label
+        
+        label_1 = font.render('Player 1 - use WASD keys', 1, (255, 255, 255)) #adds the "player 1 keys" label
+        window.blit(label_1, (338, 475))
+        
+        label_2 = font.render('Player 2 - use ←↑→↓ keys', 1, (255, 255, 255)) #adds the "player 2 keys" label
+        window.blit(label_2, (338, 525))
+
+
         pygame.display.update()
 
         for event in pygame.event.get():
