@@ -1,6 +1,5 @@
 import random
 import pygame
-from pygame.locals import *
 from pygame import mixer
 
 """
@@ -8,13 +7,13 @@ from pygame import mixer
 play_height = 2 * play_width
 
 tetriminos:
-    0 - S - pristine
-    1 - Z - topaz
-    2 - I - teacup rose
-    3 - O - honeybee
-    4 - J - blue nova
-    5 - L - polar sky
-    6 - T - hazy lilac
+    0 - S - green
+    1 - Z - red
+    2 - I - cyan
+    3 - O - yellow
+    4 - J - blue
+    5 - L - orange
+    6 - T - purple
 """
 
 pygame.font.init()
@@ -138,18 +137,14 @@ T = [['.....',
       '..0..',
       '.....']]
 
-
-# gets background music to play
-mixer.init()
-mixer.music.load('Music File/tetris_music.mp3')
-mixer.music.play()
-
 # index represents the shape
 shapes = [S, Z, I, O, J, L, T]
-shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
+shape_colors = [(237,225,207), (179, 104, 67), (236, 192, 174), (234, 215, 149), (93, 107, 143), (204, 219, 225), (150, 139, 153)]
 
 
 # class to represent each of the pieces
+
+
 class Piece(object):
     def __init__(self, x, y, shape):
         self.x = x
@@ -428,9 +423,8 @@ def main(window):
                 # need to lock the piece position
                 # need to generate new piece
                 change_piece_1 = True
-
             current_piece_2.y += 1
-            if not valid_space(current_piece_2, grid, 10, 20) and current_piece_2.y > 0:
+            if not valid_space(current_piece_2, grid, 0, 20) and current_piece_2.y > 0:
                 current_piece_2.y -= 1
                 # since only checking for down - either reached bottom or hit another piece
                 # need to lock the piece position
@@ -517,6 +511,7 @@ def main(window):
                 p = (pos[0], pos[1])
                 locked_positions[p] = current_piece_2.color       # add the key and value for piece 2 in the p2 dictionary
             current_piece_2 = next_piece_2
+            current_piece_2.x += 10
             next_piece_2 = get_shape()
             change_piece_2 = False
 
@@ -540,6 +535,7 @@ def main(window):
     pygame.quit()
 
 
+   
 def main_menu(window):
     run = True
     while run:
