@@ -1,7 +1,5 @@
 import random
 import pygame
-from pygame.locals import *
-from pygame import mixer
 
 """
 10 x 20 grid
@@ -139,10 +137,15 @@ T = [['.....',
       '.....']]
 
 
-# gets background music to play
-mixer.init()
-mixer.music.load('Music File/tetris_music.mp3')
-mixer.music.play()
+# plays background music 
+pygame.init()
+mp3_file = "/Users/hope/Documents/AdvancedPython/tetris/tetris_music.mp3"
+#mp3_file = "tetris_music.mp3"
+pygame.mixer.music.load(mp3_file)
+pygame.mixer.music.play()
+while pygame.mixer.music.get_busy():
+    pygame.time.Clock().tick(10)
+
 
 # index represents the shape
 shapes = [S, Z, I, O, J, L, T]
