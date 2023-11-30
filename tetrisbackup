@@ -137,6 +137,11 @@ T = [['.....',
       '..0..',
       '.....']]
 
+# plays background music 
+pygame.init()
+pygame.mixer.music.load("tetris_music.ogg")
+pygame.mixer.music.play()
+
 # index represents the shape
 shapes = [S, Z, I, O, J, L, T]
 shape_colors = [(237,225,207), (179, 104, 67), (236, 192, 174), (234, 215, 149), (93, 107, 143), (204, 219, 225), (150, 139, 153)]
