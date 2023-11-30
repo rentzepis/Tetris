@@ -320,7 +320,7 @@ def draw_window(surface, grid, score=0, last_score=0):
 
     # current score
     font = pygame.font.SysFont('courier', 30)
-    label = font.render('SCORE   ' + str(score) , 1, (255, 255, 255))
+    label = font.render('SCORE ' + str(score) , 1, (255, 255, 255))
 
     start_x = top_left_x + play_width + 50
     start_y = top_left_y + (play_height / 2 - 100)
@@ -339,9 +339,9 @@ def draw_window(surface, grid, score=0, last_score=0):
     surface.blit(label_p2, (label_p1_x + 300, label_p2_x))
     
      # last score
-    label_hi = font.render('HIGHSCORE   ' + str(last_score), 1, (255, 255, 255))
+    label_hi = font.render('HIGHSCORE ' + str(last_score), 1, (255, 255, 255))
 
-    start_x_hi = top_left_x - 240
+    start_x_hi = top_left_x - 285
     start_y_hi = top_left_y + 200
 
     surface.blit(label_hi, (start_x_hi + 20, start_y_hi + 200))
