@@ -139,12 +139,8 @@ T = [['.....',
 
 # plays background music 
 pygame.init()
-mp3_file = "/Users/hope/Documents/AdvancedPython/tetris/tetris_music.mp3"
-#mp3_file = "tetris_music.mp3"
-pygame.mixer.music.load(mp3_file)
+pygame.mixer.music.load("tetris_music.mp3")
 pygame.mixer.music.play()
-while pygame.mixer.music.get_busy():
-    pygame.time.Clock().tick(10)
 
 
 # index represents the shape
