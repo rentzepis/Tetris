@@ -429,7 +429,7 @@ def main(window):
                 # need to generate new piece
                 change_piece_1 = True
             current_piece_2.y += 1
-            if not valid_space(current_piece_2, grid, 0, 20) and current_piece_2.y > 0:
+            if not valid_space(current_piece_2, grid, 10, 20) and current_piece_2.y > 0:
                 current_piece_2.y -= 1
                 # since only checking for down - either reached bottom or hit another piece
                 # need to lock the piece position
